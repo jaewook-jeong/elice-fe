@@ -19,7 +19,7 @@ const SearchArea = () => {
     if (debounceKeyword) {
       replace({ pathname, query: { ...query, keyword: debounceKeyword } });
     }
-  }, [debounceKeyword, pathname, query, replace]);
+  }, [debounceKeyword]);
 
   return (
     <Styled.Wrapper>
