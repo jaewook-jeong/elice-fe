@@ -1,5 +1,10 @@
 import Layout from '@/components/Layout';
+import { SearchArea } from '@/features/PA';
 
 export default function Home() {
-  return <Layout>안녕?</Layout>;
+  return (
+    <Layout>
+      <SearchArea />
+    </Layout>
+  );
 }
