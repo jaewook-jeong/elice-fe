@@ -5,7 +5,7 @@ import useDebounce from '@/hooks/useDebounce';
 import { useRouter } from 'next/router';
 
 const SearchArea = () => {
-  const { push, pathname, query } = useRouter();
+  const { replace, pathname, query } = useRouter();
   const [keyword, setKeyword] = useState('');
   const debounceKeyword = useDebounce({ value: keyword, delay: 300 });
 
@@ -17,9 +17,9 @@ const SearchArea = () => {
   );
   useEffect(() => {
     if (debounceKeyword) {
-      push({ pathname, query: { ...query, keyword: debounceKeyword } });
+      replace({ pathname, query: { ...query, keyword: debounceKeyword } });
     }
-  }, [debounceKeyword, pathname, query, push]);
+  }, [debounceKeyword, pathname, query, replace]);
 
   return (
     <Styled.Wrapper>
