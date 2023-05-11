@@ -1,3 +1,5 @@
+import Layout from '@/components/Layout';
+
 export default function Home() {
-  return <>안녕?</>;
+  return <Layout>안녕?</Layout>;
 }
