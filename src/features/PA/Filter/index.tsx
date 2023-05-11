@@ -1,7 +1,7 @@
 import * as Styled from './styled';
 import FilterButton from './FilterButton';
 import { useRouter } from 'next/router';
-import { makeQueryArray } from './Filter.utils';
+import { makeQueryArray } from '@/utils/query';
 
 const FILTER = [
   {
