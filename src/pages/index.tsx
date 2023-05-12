@@ -41,8 +41,7 @@ export default function Home() {
       <Filter initOffset={() => setOffset(0)} />
 
       <div ref={courseRef}>
-        {status === 'loading' && <StatusImage text="검색 결과를 불러오고 있습니다." />}
-        {status === 'error' && <StatusImage text="에러가 발생했습니다." />}
+        {status === 'error' && isReady && <StatusImage text="에러가 발생했습니다." />}
         {status === 'success' && (
           <>
             {data?.courses && <Courses courses={data.courses} />}
