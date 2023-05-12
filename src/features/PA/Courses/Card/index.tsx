@@ -11,6 +11,14 @@ const LabelMapper = {
     true: '무료',
     false: '유료',
   },
+  1: {
+    true: '구독',
+    false: '구독',
+  },
+  2: {
+    true: '구독',
+    false: '구독',
+  },
   4: {
     true: '구독',
     false: '구독',
@@ -24,7 +32,7 @@ const LabelMapper = {
 const Card = ({ card: { description, enrollType, isFree, logoUrl, title } }: Props) => {
   return (
     <Styled.Wrapper>
-      <Styled.Label>{LabelMapper[enrollType as 0 | 5 | 4][`${isFree}`]}</Styled.Label>
+      <Styled.Label>{LabelMapper[enrollType as 0 | 1 | 2 | 5 | 4][`${isFree}`]}</Styled.Label>
       <Styled.Title>{title}</Styled.Title>
       <Styled.Description>{description}</Styled.Description>
       <Styled.IconLogoBox>
@@ -57,13 +65,15 @@ const Card = ({ card: { description, enrollType, isFree, logoUrl, title } }: Pro
             <Styled.IconText>기간: 무제한</Styled.IconText>
           </Styled.IconRow>
         </Styled.IconBox>
-        <Image
-          alt="logo image"
-          src={logoUrl}
-          width={52}
-          height={52}
-          style={{ objectFit: 'contain' }}
-        />
+        {logoUrl && (
+          <Image
+            alt="logo image"
+            src={logoUrl}
+            width={52}
+            height={52}
+            style={{ objectFit: 'contain' }}
+          />
+        )}
       </Styled.IconLogoBox>
     </Styled.Wrapper>
   );
