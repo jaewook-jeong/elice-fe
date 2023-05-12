@@ -20,7 +20,11 @@ const FILTER = [
   },
 ];
 
-const Filter = () => {
+interface Props {
+  initOffset: () => void;
+}
+
+const Filter = ({ initOffset }: Props) => {
   const { query, replace, pathname } = useRouter();
   return (
     <Styled.Wrapper>
@@ -29,6 +33,7 @@ const Filter = () => {
         const queryArray = makeQueryArray(queryValue);
         const onClick = (value: string) => {
           const isSelected = queryArray.includes(value);
+          initOffset();
           if (isSelected) {
             replace({
               pathname,

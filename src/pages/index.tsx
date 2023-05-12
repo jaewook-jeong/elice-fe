@@ -32,7 +32,7 @@ export default function Home() {
   return (
     <Layout>
       <SearchArea />
-      <Filter />
+      <Filter initOffset={() => setOffset(0)} />
       <div ref={courseRef}>
         {data?.courses && <Courses courses={data.courses} />}
         {data?.count && (
