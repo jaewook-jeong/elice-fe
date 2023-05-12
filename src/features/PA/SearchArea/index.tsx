@@ -25,7 +25,12 @@ const SearchArea = () => {
 
   useEffect(() => {
     if (isReady) {
-      replace({ pathname, query: { ...query, keyword: debounceKeyword } });
+      if (debounceKeyword) {
+        replace({ pathname, query: { ...query, keyword: debounceKeyword } });
+      } else {
+        delete query.keyword;
+        replace({ pathname, query: { ...query } });
+      }
     }
   }, [debounceKeyword, isReady]);
 
