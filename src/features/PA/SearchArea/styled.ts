@@ -7,6 +7,7 @@ export const Wrapper = styled.div`
   margin: 12px 0;
   border: 1px solid rgb(201, 202, 204);
   border-radius: 4px;
+  background-color: white;
 `;
 
 export const IconBox = styled.div`
