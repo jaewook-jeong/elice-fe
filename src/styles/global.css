@@ -1,7 +1,13 @@
+@font-face {
+  font-family: 'Pretendard';
+  src: url('/PretendardVariable.ttf');
+}
+
 * {
   box-sizing: border-box;
 }
 
 html {
   background-color: #f0f1f3;
+  font-family: 'Pretendard';
 }
