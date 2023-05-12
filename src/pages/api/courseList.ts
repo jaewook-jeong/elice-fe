@@ -13,25 +13,8 @@ interface OrgCourseListResponses {
   }[];
 }
 
-interface CoursesListQuery {
-  price: string;
-  title: string;
-  offset: string;
-}
-
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const { price, title, offset } = req.query as unknown as CoursesListQuery;
-  const parsedPrice = price.split(',').map((priceParam) => {
-    return { enroll_type: 0, is_free: priceParam === 'free' ? true : false };
-  });
-
-  const filter_conditions = JSON.stringify({
-    $and: [{ title: `%${title === 'undefined' ? '' : title}%` }, { $or: parsedPrice }],
-  });
-
-  const { data } = await axios.get<OrgCourseListResponses>(
-    `https://api-rest.elice.io/org/academy/course/list?filter_confitions=${filter_conditions}&offset=${offset}&count=20`,
-  );
+  const { data } = await axios.get<OrgCourseListResponses>(req.body.endpoint as string);
 
   res.status(200).json({
     count: data.course_count,

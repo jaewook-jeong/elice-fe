@@ -9,6 +9,8 @@ import Layout from '@/components/Layout';
 import { SearchArea, Filter } from '@/features/PA';
 import Courses from '@/features/PA/Courses';
 import Pagination from '@/components/Pagination';
+import { makeFilterConditions, makePriceQuery } from '@/utils/makeQueryString';
+import StatusImage from '@/components/StatusImage';
 
 const COUNT_PER_PAGE = 20;
 
@@ -17,30 +19,43 @@ export default function Home() {
   const courseRef = useRef<HTMLDivElement | null>(null);
 
   const [offset, setOffset] = useState(0);
-  const title = query.keyword;
-  const price = makeQueryArray(query.price).join(',');
+  const title = query.keyword as string;
 
-  const { data, isLoading } = useQuery(['courseList', price, title, offset], {
+  const price = makePriceQuery(makeQueryArray(query.price));
+  const filter_conditions = makeFilterConditions(title, price);
+
+  const { data, status } = useQuery(['courseList', price, title, offset], {
     queryFn: () =>
-      axios.get<CoursesResponse>(`/api/courseList?price=${price}&title=${title}&offset=${offset}`),
+      axios.post<CoursesResponse>(`/api/courseList`, {
+        endpoint: `https://api-rest.elice.io/org/academy/course/list?filter_conditions=${filter_conditions}&offset=${offset}&count=20`,
+      }),
     enabled: isReady,
     select: (data) => data.data,
-    keepPreviousData: true,
     onSuccess: () => courseRef.current?.scrollIntoView(),
+    useErrorBoundary: false,
   });
 
   return (
     <Layout>
       <SearchArea />
       <Filter initOffset={() => setOffset(0)} />
+
       <div ref={courseRef}>
-        {data?.courses && <Courses courses={data.courses} />}
-        {data?.count && (
-          <Pagination
-            page={Math.floor(offset / 20) + 1}
-            totalDataCount={data.count}
-            onChangePage={(page) => setOffset((page - 1) * 20)}
-          />
+        {status === 'loading' && <StatusImage text="검색 결과를 불러오고 있습니다." />}
+        {status === 'error' && <StatusImage text="에러가 발생했습니다." />}
+        {status === 'success' && (
+          <>
+            {data?.courses && <Courses courses={data.courses} />}
+            {data?.count ? (
+              <Pagination
+                page={Math.floor(offset / 20) + 1}
+                totalDataCount={data.count}
+                onChangePage={(page) => setOffset((page - 1) * COUNT_PER_PAGE)}
+              />
+            ) : (
+              <StatusImage text="검색 결과가 없습니다." />
+            )}
+          </>
         )}
       </div>
     </Layout>

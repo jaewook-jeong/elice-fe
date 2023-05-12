@@ -5,7 +5,7 @@ import useDebounce from '@/hooks/useDebounce';
 import { useRouter } from 'next/router';
 
 const SearchArea = () => {
-  const { replace, pathname, query } = useRouter();
+  const { replace, pathname, query, isReady } = useRouter();
   const [keyword, setKeyword] = useState('');
   const debounceKeyword = useDebounce({ value: keyword, delay: 300 });
 
@@ -16,10 +16,18 @@ const SearchArea = () => {
     [setKeyword],
   );
   useEffect(() => {
-    if (debounceKeyword) {
+    if (isReady) {
+      if (typeof query.keyword === 'string') {
+        setKeyword(query.keyword);
+      }
+    }
+  }, [isReady]);
+
+  useEffect(() => {
+    if (isReady) {
       replace({ pathname, query: { ...query, keyword: debounceKeyword } });
     }
-  }, [debounceKeyword]);
+  }, [debounceKeyword, isReady]);
 
   return (
     <Styled.Wrapper>
@@ -31,7 +39,11 @@ const SearchArea = () => {
           alt="search icon"
         />
       </Styled.IconBox>
-      <Styled.Input placeholder="배우고 싶은 언어, 기술을 검색해보세요" onChange={onChange} />
+      <Styled.Input
+        value={keyword}
+        placeholder="배우고 싶은 언어, 기술을 검색해보세요"
+        onChange={onChange}
+      />
     </Styled.Wrapper>
   );
 };

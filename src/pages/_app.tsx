@@ -12,8 +12,9 @@ export default function App({ Component, pageProps }: AppProps) {
         defaultOptions: {
           queries: {
             useErrorBoundary: true,
-            retry: 1,
+            retry: 0,
             refetchOnWindowFocus: false,
+            keepPreviousData: true,
           },
         },
       }),
