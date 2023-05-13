@@ -1,4 +1,5 @@
-function generateArrayFillNumber(start: number, end: number): number[] {
+export function generateArrayFillNumber(start: number, end: number): number[] {
+  if (start > end) throw new Error('시작하는 숫자가 끝나는 숫자보다 큽니다.');
   return Array(end - start + 1)
     .fill(undefined)
     .reduce((arr, _, index) => {
@@ -7,7 +8,7 @@ function generateArrayFillNumber(start: number, end: number): number[] {
     }, []);
 }
 
-export function generateShouldShowingPage({
+export function generateShouldShowPages({
   currentPage,
   totalPage,
   howManyShowPage = 9,
@@ -16,6 +17,7 @@ export function generateShouldShowingPage({
   totalPage: number;
   howManyShowPage?: number;
 }): number[] {
+  if (howManyShowPage % 2 === 0) throw new Error('보여야하는 페이지의 수는 홀수여야합니다.');
   const centerCount = Math.ceil(howManyShowPage / 2);
   let pages;
   if (totalPage < howManyShowPage + 1) {

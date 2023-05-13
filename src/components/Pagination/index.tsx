@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react';
 import * as Styled from './styled';
-import { generateShouldShowingPage } from './utils';
+import { generateShouldShowPages } from './utils';
 interface Props {
   page: number;
   totalDataCount: number;
@@ -20,7 +20,7 @@ const Pagination = ({
   );
   const visiblePages = useCallback(
     () =>
-      generateShouldShowingPage({
+      generateShouldShowPages({
         currentPage,
         totalPage,
       }),
