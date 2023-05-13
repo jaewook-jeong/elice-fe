@@ -54,6 +54,7 @@ const Filter = ({ initOffset }: Props) => {
                   isSelected={queryArray.includes(value)}
                   label={label}
                   onClick={() => onClick(value)}
+                  value={value}
                 />
               ))}
             </Styled.FilterButtons>
