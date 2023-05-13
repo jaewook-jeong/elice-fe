@@ -3,13 +3,13 @@ import { useRef, useState } from 'react';
 import { useQuery } from 'react-query';
 import axios from 'axios';
 
-import { makeQueryArray } from '@/utils/query';
+import { makeQueryArray, makeFilterConditions, makePriceQuery } from '@/utils';
 import { CoursesResponse } from '@/types/course';
 import { Layout, Pagination, StatusImage } from '@/components';
 import { SearchArea, Filter, Courses } from '@/features/PA';
-import { makeFilterConditions, makePriceQuery } from '@/utils/makeQueryString';
 
 const COUNT_PER_PAGE = 20;
+const ENDPOINT = 'https://api-rest.elice.io/org/academy/course/list';
 
 export default function Home() {
   const { query, isReady } = useRouter();
@@ -24,7 +24,7 @@ export default function Home() {
   const { data, status } = useQuery(['courseList', price, title, offset], {
     queryFn: () =>
       axios.post<CoursesResponse>(`/api/courseList`, {
-        endpoint: `https://api-rest.elice.io/org/academy/course/list?filter_conditions=${filter_conditions}&offset=${offset}&count=20`,
+        endpoint: `${ENDPOINT}?filter_conditions=${filter_conditions}&offset=${offset}&count=20`,
       }),
     enabled: isReady,
     select: (data) => data.data,
