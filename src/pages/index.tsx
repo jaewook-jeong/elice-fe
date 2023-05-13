@@ -5,12 +5,9 @@ import axios from 'axios';
 
 import { makeQueryArray } from '@/utils/query';
 import { CoursesResponse } from '@/types/course';
-import Layout from '@/components/Layout';
-import { SearchArea, Filter } from '@/features/PA';
-import Courses from '@/features/PA/Courses';
-import Pagination from '@/components/Pagination';
+import { Layout, Pagination, StatusImage } from '@/components';
+import { SearchArea, Filter, Courses } from '@/features/PA';
 import { makeFilterConditions, makePriceQuery } from '@/utils/makeQueryString';
-import StatusImage from '@/components/StatusImage';
 
 const COUNT_PER_PAGE = 20;
 
