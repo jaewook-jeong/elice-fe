@@ -1,38 +1,52 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+[해당 페이지](https://academy.elice.io/courses/all?tab=course)의 간소화 버전입니다.
 
-## Getting Started
+## 기술스택
 
-First, run the development server:
+- Next.js
+- react-query
+- emotion
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
+## 폴더구조
+
+```
+components: 디자인 시스템에 준하는 공유 컴포넌트 폴더입니다.
+features: 페이지별 feature(기능)라고 생각되는 도메인 단위의 폴더입니다. 현재 error와 PA(programming assignment)에 관한 feature가 존재합니다.
+  * feature내부에는 해당 도메인에서 쓰이는 컴포넌트 및 로직이 존재합니다.
+styles: global한 css 및 스타일과 관련한 유틸이 존재하는 폴더입니다.
+types: 타입에 대한 정의를 담은 폴더입니다. 기타 컴포넌트에서 사용되는 prop은 각 컴포넌트별로 정의되어있습니다.
+utils: 공용으로 사용될 수 있는 유틸을 넣어둔 폴더입니다.
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 상태관리
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+전역 상태관리가 필요없다고 생각했습니다. 새로고침해도 현재 페이지가 유지되어야 했기 때문에 쿼리스트링은 필수적이었습니다. 따라서 페이지내에서 검색이나 필터에 해당하는 상태는 쿼리스트링으로 대체 가능했습니다. 만약 상태관리를 사용한다면 불필요하게 현재의 쿼리스트링과 상태값이 동기화되는 로직이 필수적입니다. 또한 url과 상태값이 양방향에 영향을 미칠 수 있기 때문에 오히려 로직이 복잡해진다고 판단했습니다.
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+추가적으로 비동기적인 상태관리는 api콜이 발생할 때 필요한데 이는 react-query로 처리했습니다. server state에 관해 효과적으로 관리하고 많은 기능을 제공합니다.
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+## 에러처리
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+에러처리는 전역에 error boundary를 뒀습니다. 그래서 에러 발생시 해당 UI를 보여줍니다. 대신 api 비동기 요청에서 발생한 오류는 따로 errorboundary를 타지않게 처리했습니다. 그리하여 페이지의 문제라기보다 해당 요청에 대한 에러를 유저가 명시적으로 확인할 수 있도록 UI처리했습니다.
 
-## Learn More
+## 테스트 코드 작성
 
-To learn more about Next.js, take a look at the following resources:
+유틸과 컴포넌트에 대한 테스트를 작성했습니다.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+유틸은 쿼리스트링, 페이지네이션 등에서 함수에 대해 테스트를 작성했습니다.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+컴포넌트 같은 경우는 검색창과 필터, 페이지네이션에 대해 작성했습니다. 검색창과 필터는 url로 상태를 관리하다보니 쿼리스트링에 맞게 알맞은 UI를 보여주는지 확인했습니다. 페이지네이션같은 경우는 보여줘야 하는 페이지와 왼쪽 오른쪽 버튼에 대해 작성했습니다.
 
-## Deploy on Vercel
+## api
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+API routes를 활용해 작성했습니다. 따라서 node환경이므로 CORS에 대한 문제를 자연스럽게 해결할 수 있습니다.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+특이사항으로는 next서버 api로 요청할 때 post로 실제 요청되야 하는 endpoint의 주소를 body에 실어보냈습니다. 만약 get으로 쿼리스트링에 보내는 경우 인코딩으로 문제가 생겨 알맞게 필터링된 정보를 가져올 수 없습니다.
+
+```
+정상: https://api-rest.elice.io/org/academy/course/list?filter_conditions={\"$and\":[{\"title\":\"%알고리즘%\"},{\"$or\":[]}]}&offset=0&count=20
+
+문제가 있는 경우: https://api-rest.elice.io/org/academy/course/list/?filter_conditions=%7B%5C%22$and%5C%22:[%7B%5C%22title%5C%22:%5C%22%%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98%%5C%22%7D,%7B%5C%22$or%5C%22:[]%7D]%7D&offset=0&count=20
+```
+
+## 기타
+
+해당 페이지는 페이지 내에서 유저 event는 곧바로 새로운 데이터로 페이지를 그려야하기 때문에 리렌더링에 대한 문제를 고민하지 않았습니다.
