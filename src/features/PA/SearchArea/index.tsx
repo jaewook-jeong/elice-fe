@@ -1,20 +1,32 @@
 import Image from 'next/image';
-import * as Styled from './styled';
 import { FormEvent, useCallback, useEffect, useState } from 'react';
-import useDebounce from '@/hooks/useDebounce';
 import { useRouter } from 'next/router';
+import debounce from 'lodash.debounce';
+
+import * as Styled from './styled';
 
 const SearchArea = () => {
   const { replace, pathname, query, isReady } = useRouter();
   const [keyword, setKeyword] = useState('');
-  const debounceKeyword = useDebounce({ value: keyword, delay: 300 });
 
-  const onChange = useCallback(
-    (e: FormEvent<HTMLInputElement>) => {
-      setKeyword(e.currentTarget.value);
-    },
-    [setKeyword],
+  const debounceQuery = useCallback(
+    debounce((nextKeyword) => {
+      if (nextKeyword) {
+        replace({ pathname, query: { ...query, keyword: nextKeyword } });
+      } else {
+        delete query.keyword;
+        replace({ pathname, query: { ...query } });
+      }
+    }, 300),
+    [],
   );
+
+  const onChange = useCallback((e: FormEvent<HTMLInputElement>) => {
+    const value = e.currentTarget.value;
+    setKeyword(value);
+    debounceQuery(value);
+  }, []);
+
   useEffect(() => {
     if (isReady) {
       if (typeof query.keyword === 'string') {
@@ -22,17 +34,6 @@ const SearchArea = () => {
       }
     }
   }, [isReady]);
-
-  useEffect(() => {
-    if (isReady) {
-      if (debounceKeyword) {
-        replace({ pathname, query: { ...query, keyword: debounceKeyword } });
-      } else {
-        delete query.keyword;
-        replace({ pathname, query: { ...query } });
-      }
-    }
-  }, [debounceKeyword, isReady]);
 
   return (
     <Styled.Wrapper>
