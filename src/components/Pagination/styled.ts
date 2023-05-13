@@ -38,5 +38,5 @@ export const Page = styled.button<{ $isSelected: boolean }>`
 export const Arrow = styled.button<{ $disabled: boolean }>`
   color: ${({ $disabled }) => ($disabled ? '#ccc' : '#222')};
   border: none;
-  cursor: pointer;
+  cursor: ${({ $disabled }) => ($disabled ? 'not-allowed' : 'pointer')};
 `;

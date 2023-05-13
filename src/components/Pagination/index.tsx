@@ -30,7 +30,10 @@ const Pagination = ({
   return (
     <Styled.Wrapper>
       <Styled.Pagination>
-        <Styled.Arrow $disabled={currentPage === 1} onClick={() => onChangePage(currentPage - 1)}>
+        <Styled.Arrow
+          $disabled={currentPage === 1}
+          onClick={() => currentPage !== 1 && onChangePage(currentPage - 1)}
+        >
           {'<'}
         </Styled.Arrow>
         {visiblePages().map((page) => (
@@ -44,7 +47,7 @@ const Pagination = ({
         ))}
         <Styled.Arrow
           $disabled={currentPage === totalPage}
-          onClick={() => onChangePage(currentPage + 1)}
+          onClick={() => currentPage !== totalPage && onChangePage(currentPage + 1)}
         >
           {'>'}
         </Styled.Arrow>
